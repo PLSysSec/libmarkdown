@@ -4,10 +4,15 @@
 #include "config.h"
 #include "cstring.h"
 
+
 #ifdef HAVE_INTTYPES_H
 #   include <inttypes.h>
 #elif HAVE_STDINT_H
 #   include <stdint.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /* flags, captured into a named type
@@ -262,5 +267,9 @@ extern int  __mkd_io_strget(struct string_stream *);
  * if it fails
  */
 #define DO_OR_DIE(op) if ( (op) == EOF ) return EOF; else 1
+
+#ifdef __cplusplus
+extern }
+#endif
 
 #endif/*_MARKDOWN_D*/

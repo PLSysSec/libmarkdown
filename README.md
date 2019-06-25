@@ -1,3 +1,27 @@
+This is a fork of discount. We build a shared library so we can sandbox it in
+`mod_markdown`. As an example of how to use this library in a sandbox way see
+[rlboxMain.cpp](rlboxMain.cpp).
+
+## Building the shared library
+
+1. Link [RLBox](https://github.com/shravanrn/rlbox_api) header files:
+
+```
+ln -s $(RLBOX_DIR)/rlbox.h
+ln -s $(RLBOX_DIR)/RLBox_DynLib.h
+```
+
+2. Configure and build
+
+```
+./configure.sh
+make
+```
+
+This will produce `libmarkdown.so` (and `rlboxMain` if you want a toy example). We will use `libmarkdown.so` in our `mod_markdown`.
+
+
+# OLD README
 DISCOUNT is a implementation of John Gruber & Aaron Swartz's
  Markdown markup language.   It implements, as far as I can tell,
 all of the language as described in

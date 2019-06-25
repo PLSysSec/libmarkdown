@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include <mkdio.h>
+#include "mkdio.h"
 #include <errno.h>
 #include <string.h>
 #include <stdarg.h>

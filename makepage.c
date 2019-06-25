@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <mkdio.h>
+#include "mkdio.h"
 #include "config.h"
 #include "pgm_options.h"
 #include "gethopt.h"

@@ -9,6 +9,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 struct h_opt {
     int  option;
@@ -39,5 +43,10 @@ extern int   hopterr(struct h_context *, int);
 extern struct h_opt *gethopt(struct h_context *, struct h_opt*, int);
 
 extern void hoptusage(char *, struct h_opt*, int, char *);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif/*__GETHOPT_D*/

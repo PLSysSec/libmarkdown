@@ -36,7 +36,7 @@ COMMON=pgm_options.o gethopt.o notspecial.o
 
 MAN3PAGES=mkd-callbacks.3 mkd-functions.3 markdown.3 mkd-line.3
 
-all: $(PGMS) $(SAMPLE_PGMS) $(TESTFRAMEWORK)
+all: $(PGMS) $(SAMPLE_PGMS) $(TESTFRAMEWORK) libmarkdown.so rlboxMain
 
 install: $(PGMS) $(DESTDIR)$(BINDIR) $(DESTDIR)$(LIBDIR) $(DESTDIR)$(INCDIR) $(DESTDIR)$(PKGDIR)
 	$(INSTALL_PROGRAM) $(PGMS) $(DESTDIR)$(BINDIR)
@@ -156,10 +156,18 @@ echo.o:	tools/echo.c config.h
 	$(BUILD) -c -o echo.o tools/echo.c
 echo:   echo.o
 	$(LINK) -o echo echo.o
+
+rlboxMain: rlboxMain.cpp
+	$(CXX) -std=c++14 -Wl,--export-dynamic -ldl $< -o $@
+
+libmarkdown.so: mkdio.c resource.c emmatch.c tags.c markdown.c gethopt.c generate.c setup.c xml.c Csio.c version.c docheader.c github_flavoured.c xmlpage.c css.c makepage.c flags.c toc.c
+	$(CC) -g -shared -fPIC -DBRANCH=`./branch` -DVERSION=\"`cat VERSION`\" $^ -o $@
 	
 clean:
 	rm -f $(PGMS) $(TESTFRAMEWORK) $(SAMPLE_PGMS) *.o
 	rm -f $(MKDLIB) `./librarian.sh files $(MKDLIB) VERSION`
+	-rm -f libmarkdown.so
+	-rm -f rlboxMain
 
 distclean spotless: clean
 	@DISTCLEAN@ @GENERATED_FILES@ @CONFIGURE_FILES@ ./mktags ./blocktags

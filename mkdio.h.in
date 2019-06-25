@@ -5,6 +5,10 @@
 
 @SCALAR_HEADER_INCLUDE@
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef void MMIOT;
 
 typedef @DWORD@ mkd_flag_t;
@@ -121,6 +125,10 @@ void mkd_ref_prefix(MMIOT*, char*);
 
 /* special flags for mkd_in() and mkd_string()
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif/*_MKDIO_D*/

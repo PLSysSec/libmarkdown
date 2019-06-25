@@ -3,6 +3,10 @@
 #ifndef _TAGS_D
 #define _TAGS_D
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct kw {
     char *id;
     int  size;
@@ -15,5 +19,10 @@ void mkd_prepare_tags();
 void mkd_deallocate_tags();
 void mkd_sort_tags();
 void mkd_define_tag(char *, int);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif
