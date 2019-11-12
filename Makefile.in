@@ -7,6 +7,15 @@ INSTALL_PROGRAM=@INSTALL_PROGRAM@
 INSTALL_DIR=@INSTALL_DIR@
 INSTALL_DATA=@INSTALL_DATA@
 
+RLBOX_DIR := $(shell realpath ../rlbox_api)
+SANDBOXING_NACL_DIR=$(shell realpath ../Sandboxing_NaCl)
+NACL_CLANG32=$(SANDBOXING_NACL_DIR)/native_client/toolchain/linux_x86/pnacl_newlib/bin/i686-nacl-clang
+NACL_CLANG64=$(SANDBOXING_NACL_DIR)/native_client/toolchain/linux_x86/pnacl_newlib/bin/x86_64-nacl-clang
+NACL_AR32=$(SANDBOXING_NACL_DIR)/native_client/toolchain/linux_x86/pnacl_newlib/bin/i686-nacl-ar
+NACL_AR64=$(SANDBOXING_NACL_DIR)/native_client/toolchain/linux_x86/pnacl_newlib/bin/x86_64-nacl-ar
+NACL_CLANG++32=$(NACL_CLANG32)++
+NACL_CLANG++64=$(NACL_CLANG64)++
+
 BUILD=$(CC) -I. $(CFLAGS)
 LINK=$(CC) -L. $(LDFLAGS)
 
@@ -36,7 +45,7 @@ COMMON=pgm_options.o gethopt.o notspecial.o
 
 MAN3PAGES=mkd-callbacks.3 mkd-functions.3 markdown.3 mkd-line.3
 
-all: $(PGMS) $(SAMPLE_PGMS) $(TESTFRAMEWORK) libmarkdown.so rlboxMain
+all: $(PGMS) $(SAMPLE_PGMS) $(TESTFRAMEWORK) libmarkdown.so libmarkdown.nexe rlboxMain
 
 install: $(PGMS) $(DESTDIR)$(BINDIR) $(DESTDIR)$(LIBDIR) $(DESTDIR)$(INCDIR) $(DESTDIR)$(PKGDIR)
 	$(INSTALL_PROGRAM) $(PGMS) $(DESTDIR)$(BINDIR)
@@ -158,15 +167,19 @@ echo:   echo.o
 	$(LINK) -o echo echo.o
 
 rlboxMain: rlboxMain.cpp
-	$(CXX) -std=c++14 -Wl,--export-dynamic -ldl $< -o $@
+	$(CXX) -std=c++14 -I$(RLBOX_DIR) $< -o $@ -Wl,--export-dynamic -ldl
 
-libmarkdown.so: mkdio.c resource.c emmatch.c tags.c markdown.c gethopt.c generate.c setup.c xml.c Csio.c version.c docheader.c github_flavoured.c xmlpage.c css.c makepage.c flags.c toc.c
-	$(CC) -g -shared -fPIC -DBRANCH=`./branch` -DVERSION=\"`cat VERSION`\" $^ -o $@
-	
+libmarkdown.so: mkdio.c resource.c emmatch.c tags.c markdown.c gethopt.c generate.c setup.c xml.c Csio.c version.c docheader.c github_flavoured.c xmlpage.c css.c makepage.c flags.c toc.c pgm_options.c gethopt.c notspecial.c
+	$(CC) -O3 -shared -fPIC -DBRANCH=`./branch` -DVERSION=\"`cat VERSION`\" $^ -o $@
+
+libmarkdown.nexe: mkdio.c resource.c emmatch.c tags.c markdown.c gethopt.c generate.c setup.c xml.c Csio.c version.c docheader.c github_flavoured.c xmlpage.c css.c makepage.c flags.c toc.c pgm_options.c gethopt.c notspecial.c
+	$(NACL_CLANG64) -O3 -DBRANCH=`./branch` -DVERSION=\"`cat VERSION`\" $^ -o $@ -B$(SANDBOXING_NACL_DIR)/native_client/scons-out/nacl-x86-64/lib/ -Wl,-rpath-link,$(SANDBOXING_NACL_DIR)/native_client/scons-out/nacl-x86-64/lib -Wl,-rpath-link,$(SANDBOXING_NACL_DIR)/native_client/toolchain/linux_x86/pnacl_newlib/x86_64-nacl/lib -Wl,-rpath-link,$(SANDBOXING_NACL_DIR)/native_client/scons-out/nacl-x86-64/lib  -L$(SANDBOXING_NACL_DIR)/native_client/scons-out/nacl-x86-64/lib -L$(SANDBOXING_NACL_DIR)/native_client/toolchain/linux_x86/pnacl_newlib/x86_64-nacl/lib -L$(SANDBOXING_NACL_DIR)/native_client/scons-out/nacl-x86-64/lib -ldyn_ldr_sandbox_init
+
 clean:
 	rm -f $(PGMS) $(TESTFRAMEWORK) $(SAMPLE_PGMS) *.o
 	rm -f $(MKDLIB) `./librarian.sh files $(MKDLIB) VERSION`
 	-rm -f libmarkdown.so
+	-rm -f libmarkdown.nexe
 	-rm -f rlboxMain
 
 distclean spotless: clean
