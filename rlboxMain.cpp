@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
 
     szdoc = sandbox_invoke(sandbox, mkd_document, doc, docStr).UNSAFE_Unverified();
     if (szdoc) {
-      fwrite(*docStr.UNSAFE_Unverified(), szdoc, 1, stdout);
+      fwrite(docStr->UNSAFE_Unverified(), szdoc, 1, stdout);
     }
   }
   return 0;

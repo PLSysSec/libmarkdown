@@ -169,10 +169,10 @@ echo:   echo.o
 rlboxMain: rlboxMain.cpp
 	$(CXX) -std=c++14 -I$(RLBOX_DIR) $< -o $@ -Wl,--export-dynamic -ldl
 
-libmarkdown.so: mkdio.c resource.c emmatch.c tags.c markdown.c gethopt.c generate.c setup.c xml.c Csio.c version.c docheader.c github_flavoured.c xmlpage.c css.c makepage.c flags.c toc.c pgm_options.c gethopt.c notspecial.c
+libmarkdown.so: mkdio.c resource.c emmatch.c tags.c markdown.c gethopt.c generate.c setup.c xml.c Csio.c version.c docheader.c github_flavoured.c xmlpage.c css.c flags.c toc.c pgm_options.c gethopt.c notspecial.c
 	$(CC) -O3 -shared -fPIC -DBRANCH=`./branch` -DVERSION=\"`cat VERSION`\" $^ -o $@
 
-libmarkdown.nexe: mkdio.c resource.c emmatch.c tags.c markdown.c gethopt.c generate.c setup.c xml.c Csio.c version.c docheader.c github_flavoured.c xmlpage.c css.c makepage.c flags.c toc.c pgm_options.c gethopt.c notspecial.c
+libmarkdown.nexe: mkdio.c resource.c emmatch.c tags.c markdown.c gethopt.c generate.c setup.c xml.c Csio.c version.c docheader.c github_flavoured.c xmlpage.c css.c flags.c toc.c pgm_options.c gethopt.c notspecial.c
 	$(NACL_CLANG64) -O3 -DBRANCH=`./branch` -DVERSION=\"`cat VERSION`\" $^ -o $@ -B$(SANDBOXING_NACL_DIR)/native_client/scons-out/nacl-x86-64/lib/ -Wl,-rpath-link,$(SANDBOXING_NACL_DIR)/native_client/scons-out/nacl-x86-64/lib -Wl,-rpath-link,$(SANDBOXING_NACL_DIR)/native_client/toolchain/linux_x86/pnacl_newlib/x86_64-nacl/lib -Wl,-rpath-link,$(SANDBOXING_NACL_DIR)/native_client/scons-out/nacl-x86-64/lib  -L$(SANDBOXING_NACL_DIR)/native_client/scons-out/nacl-x86-64/lib -L$(SANDBOXING_NACL_DIR)/native_client/toolchain/linux_x86/pnacl_newlib/x86_64-nacl/lib -L$(SANDBOXING_NACL_DIR)/native_client/scons-out/nacl-x86-64/lib -ldyn_ldr_sandbox_init
 
 clean:
